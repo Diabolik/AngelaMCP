@@ -1,0 +1,155 @@
+version: 1
+
+workspace:
+  name: Angela MCP Workspace
+  maintainers:
+    - Alvaro Romero
+  tasks_root: /home/arivera/workspace/IA/tasks
+  global_resources:
+    - /home/arivera/workspace/IA/angela-context.md
+    - /home/arivera/workspace/IA/angela-engineering-rules.md
+    - /home/arivera/workspace/IA/sherlock-v3.md
+    - /home/arivera/workspace/IA/lessons-system.md
+  global_lessons_file: /home/arivera/workspace/IA/global-lessons.md
+
+bootstrap:
+  load_global_resources: true
+  load_global_lessons: true
+  load_project_contexts: true
+  load_project_lessons: true
+
+modes:
+  new:
+    create_branch: true
+    load_previous_task_context: false
+    persist_research: true
+
+  resume:
+    create_branch: false
+    load_previous_task_context: true
+    persist_research: true
+
+  exploration:
+    create_branch: false
+    load_previous_task_context: false
+    persist_research: false
+
+defaults:
+  branch_policy:
+    enabled: true
+    pattern: "feature/{ticket}"
+    collision_strategy:
+      enabled: true
+      separator: "_"
+      start_at: 1
+      mode: increment
+
+  commit_policy:
+    subject_format: "[{ticket}] {summary}"
+    language: "en"
+    body:
+      required: true
+      required_sections:
+        - Changes
+      optional_sections_for_large_changes:
+        - Problem
+
+  pr_policy:
+    title_format: "[{ticket}] {summary}"
+    language: "en"
+    required_sections:
+      - Summary
+      - Problem
+      - Solution
+    optional_sections:
+      - Root cause
+      - Changes Made
+      - Testing
+      - Evidence
+    rules:
+      omit_empty_sections: true
+      testing_only_when_manual: true
+      evidence_only_when_exists: true
+
+  task_workspace:
+    folder_name_pattern: "{ticket}"
+    main_notes_file: "task-notes.md"
+    sherlock_file: "sherlock-analysis.md"
+    use_single_living_notes_document: true
+
+  task_notes:
+    dynamic_sections_only: true
+    timestamp_format: "YYYY-MM-DD HH:mm"
+    timezone: "LocalTimeZone"
+    append_new_entries_to_existing_section: true
+    sections:
+      - key: research_summary
+        title: Research Summary
+      - key: hypotheses
+        title: Hypotheses
+      - key: findings
+        title: Findings
+      - key: decisions
+        title: Decisions
+      - key: blockers
+        title: Blockers
+      - key: next_steps
+        title: Next Steps
+      - key: local_test_evidence
+        title: Local Test Evidence
+    blocker_fields:
+      - cause
+      - impact
+      - missing_information_or_dependency
+      - open_questions
+
+  sherlock_v3:
+    explicit_request_or_agent_judgment: true
+    output_file: "sherlock-analysis.md"
+    final_confidence_required: true
+    confidence_scale: "0.0-1.0"
+    reflection_threshold: 0.85
+    open_questions_optional: true
+    lesson_candidates_optional: true
+
+  lessons:
+    scopes:
+      - global
+      - project
+    language: "en"
+    style: "rule_principle"
+    order: "newest_first"
+    deprecated_instead_of_delete: true
+    files:
+      global: /home/arivera/workspace/IA/global-lessons.md
+
+  lesson_candidates:
+    enabled_in_task_notes: true
+    enabled_in_sherlock: true
+    confirm_on_task_completion: true
+    update_existing_when_reinforced: true
+
+projects:
+  xfactor-rc:
+    display_name: XFactor RC
+    context_resources:
+      - /home/arivera/workspace/IA/projects/xfactor-rc-project-context.md
+    project_lessons_file: /home/arivera/workspace/IA/projects/xfactor-rc/project-lessons.md
+
+  xfactor-surveys:
+    display_name: XFactor Surveys
+    context_resources:
+      - /home/arivera/workspace/IA/projects/xfactor-surveys-project-context.md
+    project_lessons_file: /home/arivera/workspace/IA/projects/xfactor-surveys/project-lessons.md
+
+  xfactor-text:
+    display_name: XFactor Text
+    context_resources:
+      - /home/arivera/workspace/IA/projects/xfactor-text-project-context.md
+    project_lessons_file: /home/arivera/workspace/IA/projects/xfactor-text/project-lessons.md
+
+  xfactor-atc:
+    display_name: XFactor ATC
+    context_resources:
+      - /home/arivera/workspace/IA/projects/xfactor-atc-project-context.md
+    project_lessons_file: /home/arivera/workspace/IA/projects/xfactor-atc/project-lessons.md
