@@ -1,0 +1,8 @@
+server:
+  name: Angela MCP
+  version: 0.1.0
+  transport: stdio
+
+runtime:
+  app_env: development
+  log_level: info
