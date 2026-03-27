@@ -35,22 +35,17 @@ export const ResumeTaskArgsSchema = BootstrapTaskArgsSchema;
 
 export const StartExplorationArgsSchema = z.object({
   project: z.string().min(1),
-  topic: z.string().min(1).optional(),
-  question: z.string().min(1).optional()
-}).refine((value) => Boolean(value.topic || value.question), {
-  message: "Either topic or question is required."
+  topic: z.string().min(1)
 });
 
 export const ReadProjectContextArgsSchema = z.object({
   project: z.string().min(1),
-  mode: z.enum(["summary", "full"]).optional()
+  section: z.string().min(1).optional()
 });
 
 export const ReadTaskNotesArgsSchema = z.object({
-  project: z.string().min(1),
   ticket: z.string().min(1),
-  section: z.string().min(1).optional(),
-  mode: z.enum(["summary", "full"]).optional()
+  section: z.string().min(1).optional()
 });
 
 export const UpdateTaskNotesArgsSchema = z.object({
@@ -71,25 +66,32 @@ export const UpdateTaskNotesArgsSchema = z.object({
 export const RunSherlockAnalysisArgsSchema = z.object({
   project: z.string().min(1),
   ticket: z.string().min(1),
+  reason: z.string().min(1),
   sherlock_version: z.string().min(1).optional(),
-  investigation_goal: z.string().min(1).optional()
+  analysis_result: z.object({
+    content: z.string().min(1),
+    final_confidence: z.number().min(0).max(1),
+    open_questions_present: z.boolean(),
+    lesson_candidates_present: z.boolean()
+  }).optional()
 });
 
 export const SuggestLessonCandidatesArgsSchema = z.object({
   project: z.string().min(1),
-  ticket: z.string().min(1)
+  ticket: z.string().min(1),
+  sources: z.array(z.enum(["task_notes", "sherlock"])).min(1)
 });
 
 export const DraftCommitMessageArgsSchema = z.object({
-  project: z.string().min(1),
   ticket: z.string().min(1),
-  summary: z.string().min(1)
+  summary: z.string().min(1),
+  size: z.string().min(1).optional()
 });
 
 export const DraftPrDescriptionArgsSchema = z.object({
   project: z.string().min(1),
   ticket: z.string().min(1),
-  summary: z.string().min(1)
+  sources: z.array(z.enum(["task_notes", "sherlock"])).min(1)
 });
 
 export const RunCodeReviewArgsSchema = z.object({

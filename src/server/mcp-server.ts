@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { CallToolResult, CallToolResultSchema } from "@modelcontextprotocol/sdk/types.js";
 import { ToolRegistry } from "./tool-registry.js";
 import { ToolOrchestrator } from "./tool-orchestrator.js";
 
@@ -17,10 +18,15 @@ export function createAngelaMcpServer(
   });
 
   for (const definition of dependencies.toolRegistry.getAll()) {
-    server.tool(
+    server.registerTool(
       definition.name,
-      definition.inputSchema.shape,
-      async (argumentsForTool) => {
+      {
+        title: definition.title,
+        description: definition.description,
+        inputSchema: definition.inputSchema,
+        outputSchema: CallToolResultSchema
+      },
+      async (argumentsForTool: unknown) => {
         const context = dependencies.toolOrchestrator.createExecutionContext(
           dependencies.workspaceConfigPath
         );
@@ -31,7 +37,7 @@ export function createAngelaMcpServer(
           context
         );
 
-        return {
+        const formatted: CallToolResult = {
           content: [
             {
               type: "text",
@@ -39,6 +45,8 @@ export function createAngelaMcpServer(
             }
           ]
         };
+
+        return formatted;
       }
     );
   }

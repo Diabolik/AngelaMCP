@@ -16,6 +16,13 @@ const WorkspaceProjectSchema = z.object({
   project_lessons_file: z.string().min(1)
 });
 
+const BootstrapConfigSchema = z.object({
+  load_global_resources: z.boolean(),
+  load_global_lessons: z.boolean(),
+  load_project_contexts: z.boolean(),
+  load_project_lessons: z.boolean()
+});
+
 const WorkspaceConfigSchema = z.object({
   version: z.number().int().positive(),
   workspace: z.object({
@@ -25,6 +32,7 @@ const WorkspaceConfigSchema = z.object({
     global_resources: z.array(z.string().min(1)).default([]),
     global_lessons_file: z.string().min(1)
   }),
+  bootstrap: BootstrapConfigSchema,
   modes: z.object({
     new: z.object({
       create_branch: z.boolean(),
@@ -116,6 +124,7 @@ const WorkspaceConfigSchema = z.object({
 
 export type WorkspaceConfig = z.infer<typeof WorkspaceConfigSchema>;
 export type WorkspaceProject = z.infer<typeof WorkspaceProjectSchema>;
+export type BootstrapConfig = z.infer<typeof BootstrapConfigSchema>;
 
 export class WorkspaceConfigLoader {
   public async load(configPath: string): Promise<WorkspaceConfig> {
